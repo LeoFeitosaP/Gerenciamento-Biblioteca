@@ -1,18 +1,21 @@
-package models;
+package main.models;
 
 public class Livro {
+    private static int proximoId = 1;
+
     private String titulo;
     private String autor;
     private int anoPublicacao;
     private boolean emprestado;
-    private int idLivro = 1;
+    private int idLivro;
 
     public Livro(String titulo, String autor, int anoPublicacao) {
         this.titulo = titulo;
         this.autor = autor;
         this.anoPublicacao = anoPublicacao;
         this.emprestado = false;
-        idLivro++;
+        this.idLivro = proximoId;
+        proximoId++;
     }
 
     public String getTitulo() {
@@ -23,15 +26,14 @@ public class Livro {
         return autor;
     }
 
-    public int getAnoPublicacao() {
-        return anoPublicacao;
-    }
-
     public String getIdLivro() {
         return String.valueOf(idLivro);
     }
 
-    public void setEmprestado(boolean emprestado) {
+    public boolean getStatus() {
+        return emprestado;}
+
+    public void setStatus(boolean emprestado) {
         this.emprestado = emprestado;
     }
 
@@ -44,7 +46,7 @@ public class Livro {
             mensagemStatus = "Disponível";
         }
 
-        return "Livro ->" +
+        return "Livro -> " +
                 "ID: " + idLivro +
                 " | Titulo: " + titulo +
                 " | Autor: " + autor +

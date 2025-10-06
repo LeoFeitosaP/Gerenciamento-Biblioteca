@@ -1,8 +1,9 @@
-package models;
+package main.models;
 
 import java.time.LocalDate;
 
 public class Emprestimo {
+
     private Livro livro;
     private Usuario usuario;
     private LocalDate dataEmprestimo;
@@ -12,7 +13,7 @@ public class Emprestimo {
         this.livro = livro;
         this.usuario = usuario;
         this.dataEmprestimo = LocalDate.now();
-        this.dataDevolucao = this.dataDevolucao.plusDays(2);
+        this.dataDevolucao =  LocalDate.now().plusWeeks(2);
     }
 
     public Livro getLivro() {
@@ -24,7 +25,7 @@ public class Emprestimo {
     }
 
     public void setLivro(Livro livro) {
-        this.livro.setEmprestado(true);
+        this.livro.setStatus(true);
     }
 
     @Override

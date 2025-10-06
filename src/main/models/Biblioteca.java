@@ -1,8 +1,4 @@
-package main;
-
-import main.models.Emprestimo;
-import main.models.Livro;
-import main.models.Usuario;
+package main.models;
 
 
 import java.util.ArrayList;
@@ -27,14 +23,18 @@ public class Biblioteca {
         this.indiceLivrosPorTitulo = new HashMap<>();
     }
 
+    public static String formatarString(String str) {
+        return str.toLowerCase().replace(" ", "");
+    }
+
     public void adicionarLivro(Livro livroAdicionado) {
         livrosPorId.put(livroAdicionado.getIdLivro(), livroAdicionado);
 
-        String tituloFormatado = livroAdicionado.getTitulo().toLowerCase().replace(" ", "");
-        indiceLivrosPorTitulo.computeIfAbsent(tituloFormatado, (k) -> new ArrayList<>()).add(livroAdicionado);
+        indiceLivrosPorTitulo.computeIfAbsent(
+                formatarString(livroAdicionado.getTitulo()), (k) -> new ArrayList<>()).add(livroAdicionado);
 
-        String autorFormatado = livroAdicionado.getAutor().toLowerCase().replace(" ", "");
-        indiceLivrosPorAutor.computeIfAbsent(autorFormatado, (k) -> new ArrayList<>()).add(livroAdicionado);
+        indiceLivrosPorAutor.computeIfAbsent(
+                formatarString(livroAdicionado.getAutor()), (k) -> new ArrayList<>()).add(livroAdicionado);
     }
 
     public void adicionarUsuario(Usuario usuarioAdicionado) {
@@ -76,15 +76,31 @@ public class Biblioteca {
 
         livroDevolvido.setStatus(false);
         emprestimosAtivos.removeIf(e -> e.getLivro().getIdLivro().equals(idLivro));
+        System.out.println("Livro devolvido com sucesso.");
     }
 
-    public List<Livro> buscarPorAutor(String autor) {
-        return indiceLivrosPorAutor.getOrDefault(autor.toLowerCase() , new ArrayList<>());
-
+    public List<Livro> buscarPorAutor(String autorParcial) {
+        String autorBuscado = formatarString(autorParcial);
+        List<Livro> livrosEncontrados =  new ArrayList<>();
+        for (Livro livro : livrosPorId.values()) {
+            String autorLivro = formatarString(livro.getAutor());
+            if (autorLivro.contains(autorBuscado)) {
+                livrosEncontrados.add(livro);
+            }
+        }
+        return livrosEncontrados;
     }
 
-    public List<Livro> buscarPorTitulo(String titulo) {
-        return indiceLivrosPorTitulo.getOrDefault(titulo.toLowerCase(), new ArrayList<>());
+    public List<Livro> buscarPorTitulo(String tituloParcial) {
+        String tituloBuscado = formatarString(tituloParcial);
+        List<Livro> livrosEncontrados = new ArrayList<>();
+        for (Livro livro : livrosPorId.values()) {
+            String tituloLivro = formatarString(livro.getTitulo());
+            if (tituloLivro.contains(tituloBuscado)) {
+                livrosEncontrados.add(livro);
+            }
+        }
+        return livrosEncontrados;
     }
 
     public void listarLivros() {
@@ -101,4 +117,10 @@ public class Biblioteca {
         System.out.println("\n--- Empréstimos Ativos ---");
         emprestimosAtivos.forEach(System.out::println);
     }
+
+    public void listarUsuarios() {
+        System.out.println("\n--- Usuarios ---");
+        usuariosPorId.values().forEach(System.out::println);
+    }
+
 }
